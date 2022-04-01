@@ -5,7 +5,8 @@
 #include<dos.h>
 #include<fstream.h>
 #include<math.h>
-void load()
+// We purposefully misspelt "score" as "skore" because we thought it was funny
+void load()	// loading screen graphics
 {
 	int gd=DETECT,gm;
 	char w[11][34]={
@@ -23,6 +24,7 @@ void load()
 		       };
 	double x,y;
 	initgraph(&gd,&gm,"C:\\TurboC3\\BGI");
+	// setting x and y reference at the center of screen
 	x=getmaxx()/2;
 	y=getmaxy()/2;
 	delay(2500);
@@ -91,18 +93,19 @@ void load()
 }
 int *x=new int,*y=new int,i,skore=0,streak,j,z,hs=0;
 fstream file,file1;
-//void e();
+// Structure for storing square co-ordinates
 struct sq
 {
-	int l;
-	int t;
-	int r;
-	int b;
+	int l;	// left
+	int t;	// top
+	int r;	// right
+	int b;	// bottom
 };
-sq *ms=new sq;
-sq *mos=new sq;
+// using pointers to optimize for memory use
+sq *ms=new sq;	// target square
+sq *mos=new sq;	// moving square (player)
 void mainscr();
-void reset()
+void reset()	// reset highscore to zero
 {
 	fstream f;
 	hs=0;
@@ -165,7 +168,7 @@ void mainscr()
 		}
 	}
 }
-void sc(int a)
+void sc(int a)	// Streak Check: Check if the box co-ordinates at time of keyboard input is within 3 pixels of target
 {
 	if(a)
 	{
@@ -182,12 +185,12 @@ void sc(int a)
 			streak=0;
 	}
 }
-void dr()
+void dr()	// Randomize speed of moving box
 {       randomize();
 	j=random((((random(10000-(ms->l+ms->r)))+(random(10000-(ms->b-ms->l))))+234))%10;
 	z=random((((random(10000-(ms->l+ms->r)))+(random(10000-(ms->b-ms->l))))+234))%15;
 }
-void cut(int a)
+void cut(int a)	// cut area of box outside of target bounds
 {
 	if(a==1)
 	{
@@ -257,7 +260,7 @@ int hd(int z)
 		}
 	}
 }
-void mainframe()
+void mainframe()	// Visualize in-game UI
 {
 	*x=getmaxx()/2,*y=getmaxy()/2;
 	char buffer[80];
@@ -282,14 +285,14 @@ void mainframe()
 		rectangle(*x+98,10,*x+145,38);
 	}
 }
-void upd()
+void upd()	// up-down movement
 {
 	bar(mos->l,mos->t+i,mos->r,mos->b+i);
 	dr();
 	delay(12-j);
 	cleardevice();
 }
-void ler()
+void ler()	// left-right movement
 {
 	bar(mos->l+i,mos->t,mos->r+i,mos->b);
 	dr();
@@ -305,7 +308,7 @@ void main()
 	file.open("high-skore.dat",ios::in);
 	while(file.read((char*)&hs,sizeof(hs)));
 	int gd=DETECT,gm;
-	initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");
+	initgraph(&gd,&gm,"C:\\TURBOC3\\BGI");	// ENSURE THIS REFERENCE IS SET CORRECTLY
 	*y=getmaxy()/2;
 	*x=getmaxx()/2;
 	mainscr();
@@ -320,7 +323,7 @@ void main()
 	mos->r=ms->r;
 	mos->b=ms->b;
 	//Hit Detect
-	int hdd=69;
+	int hdd=69;	// don't ask
 	//Create Reference Rectangle
 	rectangle(ms->l,ms->t,ms->r,ms->b);
 	y:
@@ -335,7 +338,7 @@ void main()
 		if (hdd==2)       //If Hit is true
 			cut(2);
 	}        //cut the box
-	if(streak==3)
+	if(streak==3)	// if streaked 3 times, increase box size by 5 pixels
 	{
 		streak=0;
 		if((ms->r-ms->l)>(ms->b-ms->t))
@@ -364,11 +367,11 @@ void main()
 			upd();
 			if(kbhit())             //If keyboard is hit
 			{
-				if(getch()==27)
+				if(getch()==27)	// escape key
 					exit(0);
 				else
 				{
-					hdd=hd(1);
+					hdd=hd(1);	// any other keyboard input
 					goto x;
 				}
 			}
@@ -422,7 +425,7 @@ void main()
 			mos->r+=5;
 		}
 	}
-	while(!kbhit())
+	while(!kbhit())	// keep moving box if no keyboard input detected
 	{
 		for(i=-130;i<130;i++)
 		{
