@@ -484,6 +484,7 @@ void main()
 		exit(0);
 	else
 	{
+		streak=0;
 		if((r==82)||(r==114))
 		{
 			reset();
